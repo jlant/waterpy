@@ -94,6 +94,8 @@ class Topmodel:
         # Initial flow
         # Note: initial flow has default value of 1 mm/day
         self.flow_initial = flow_initial * self.timestep_daily_fraction
+        if self.flow_initial < 0.1:
+            self.flow_initial = 0.1
 
         # Watershed average storage deficit
         self.saturation_deficit_avgs = utils.nans(self.num_timesteps)
