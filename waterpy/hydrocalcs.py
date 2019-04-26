@@ -481,7 +481,7 @@ def percent_difference(observed, modeled):
     :rtype: numpy.ndarray
     """
     mean = np.mean((observed, modeled), axis=0)
-    percent_diff = ((modeled - observed) / mean) * 100
+    percent_diff = ((observed - modeled) / mean) * 100
 
     return percent_diff
 

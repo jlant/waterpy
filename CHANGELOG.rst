@@ -2,7 +2,8 @@ Changelog
 =========
 
 Version 0.1.0
---------------------
-(bugfix | feature added | etc, released on yyyy-mm-dd)
+-------------
+(initial version, released on 2019-04-26)
 
-- Add information about changes; i.e 'first release of waterpy'
+- topmodel.py: initial Dave Wolock version is implemented in this version. 
+
