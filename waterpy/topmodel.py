@@ -41,8 +41,7 @@ class Topmodel:
                  twi_mean,
                  precip_available,
                  flow_initial=1,
-                 timestep_daily_fraction=1,
-                 soil_depth_roots=1):
+                 timestep_daily_fraction=1):
 
         # Check and assign timestep daily fraction
         if timestep_daily_fraction > 1:
@@ -78,8 +77,8 @@ class Topmodel:
         self.flow_predicted = utils.nans(self.num_timesteps)
 
         # Soil hydraulic variables
-        # Note: soil depth of root zone has default value of 1 meter
-        self.soil_depth_roots = soil_depth_roots
+        # Note: soil depth of root zone set to soil depth of AB horizon
+        self.soil_depth_roots = soil_depth_ab_horizon
         self.soil_depth_c_horizon = None
         self.vertical_drainage_flux_initial = None
         self.vertical_drainage_flux = None
