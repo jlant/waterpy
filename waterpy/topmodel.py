@@ -219,7 +219,7 @@ class Topmodel:
         # self.root_zone_storage: the amount of water stored in root zone
         self.unsaturated_zone_storage = np.zeros(self.num_twi_increments)
         self.root_zone_storage = (
-            np.ones(self.num_twi_increments) * self.root_zone_storage_max
+            np.ones(self.num_twi_increments) * (self.root_zone_storage_max * 0.5)
         )
 
     def run(self):
@@ -355,7 +355,7 @@ class Topmodel:
                             self.unsaturated_zone_storage[j] = (
                                 self.unsaturated_zone_storage[j]
                                 + (self.root_zone_storage[j]
-                                   - self.root_zone_storage_max)
+                                   + self.root_zone_storage_max)
                             )
                             self.root_zone_storage[j] = self.root_zone_storage_max
                         else:

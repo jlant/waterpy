@@ -15,3 +15,11 @@ Version 0.1.0
   AB horizon, instead of having the soil depth of the roots set to 1 meter. 
 
 - topmodel.py: Add check on initial flow, if flow_initial < 0.1, set to 0.1.
+
+- topmodel.py: Change initialization of root_zone_storage by adding a
+  multiplication factor of 0.5 which is applied to the root_zone_storage_max.
+
+- topmodel.py: Change root_zone_storage - root_zone_storage_max to 
+                      root_zone_storage + root_zone_storage_max
+  This is the Robert Hudson fix to Kentucky version of Topmodel.  Occurs within
+  the conditional of root_zone_storage > root_zone_storage_max
