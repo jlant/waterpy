@@ -9,7 +9,9 @@ from .exceptions import (ParametersFileErrorInvalidHeader,
                          ParametersFileErrorInvalidSoilDepthAB,
                          ParametersFileErrorInvalidFieldCapacity,
                          ParametersFileErrorInvalidMacropore,
-                         ParametersFileErrorInvalidImperviousArea,)
+                         ParametersFileErrorInvalidImperviousArea,
+                         ParametersFileErrorInvalidFieldCapacityWiltingPoint,
+                         ParametersFileErrorInvalidFieldCapacityPorosity)
 
 
 def read(filepath):
@@ -34,7 +36,9 @@ def read(filepath):
             ParametersFileErrorInvalidSoilDepthAB,
             ParametersFileErrorInvalidFieldCapacity,
             ParametersFileErrorInvalidMacropore,
-            ParametersFileErrorInvalidImperviousArea,) as err:
+            ParametersFileErrorInvalidImperviousArea,
+            ParametersFileErrorInvalidFieldCapacityWiltingPoint,
+            ParametersFileErrorInvalidFieldCapacityPorosity) as err:
         print(err)
 
 
@@ -92,6 +96,10 @@ def check_data(data):
     check_field_capacity(data["field_capacity_fraction"]["value"])
     check_macropore(data["macropore_fraction"]["value"])
     check_impervious_area(data["impervious_area_fraction"]["value"])
+    check_field_capacity_wilting_point(data["field_capacity_fraction"]["value"],
+                                       data["wilting_point"]["value"])
+    check_field_capacity_porosity(data["field_capacity_fraction"]["value"],
+                                  data["porosity"]["value"])
 
 
 def check_scaling_parameter(value):
@@ -177,3 +185,37 @@ def check_impervious_area(value):
     """
     if not value > 0 or not value < 1:
         raise ParametersFileErrorInvalidImperviousArea(value)
+
+
+def check_field_capacity_wilting_point(field_capacity_fraction,
+                                       wilting_point_fraction):
+    """Check that the field_capacity_fraction and wilting_point_fraction are
+    valid.
+    Valid field_capacity_fraction and wilting_point_fraction values are:
+        field_capacity_fraction > wilting_point_fraction
+
+    :param value: field capacity fraction value.
+    :type value: float
+    :param value: wilting point fraction value.
+    :type value: float
+    """
+    if not field_capacity_fraction > wilting_point_fraction:
+        raise ParametersFileErrorInvalidFieldCapacityWiltingPoint(field_capacity_fraction,
+                                                                  wilting_point_fraction)
+
+
+def check_field_capacity_porosity(field_capacity_fraction,
+                                  porosity_fraction):
+    """Check that the field_capacity_fraction and porosity_fraction are
+    valid.
+    Valid field_capacity_fraction and porosity_fraction values are:
+        porosity_fraction > field_capacity_fraction
+
+    :param value: field capacity fraction value.
+    :type value: float
+    :param value: porosity fraction value.
+    :type value: float
+    """
+    if not porosity_fraction > field_capacity_fraction:
+        raise ParametersFileErrorInvalidFieldCapacityPorosity(field_capacity_fraction,
+                                                              porosity_fraction)

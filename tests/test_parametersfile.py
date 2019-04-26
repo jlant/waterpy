@@ -4,13 +4,15 @@ from io import StringIO
 import pytest
 
 from waterpy.exceptions import (ParametersFileErrorInvalidHeader,
-                                   ParametersFileErrorInvalidScalingParameter,
-                                   ParametersFileErrorInvalidLatitude,
-                                   ParametersFileErrorInvalidSoilDepthTotal,
-                                   ParametersFileErrorInvalidSoilDepthAB,
-                                   ParametersFileErrorInvalidFieldCapacity,
-                                   ParametersFileErrorInvalidMacropore,
-                                   ParametersFileErrorInvalidImperviousArea,)
+                                ParametersFileErrorInvalidScalingParameter,
+                                ParametersFileErrorInvalidLatitude,
+                                ParametersFileErrorInvalidSoilDepthTotal,
+                                ParametersFileErrorInvalidSoilDepthAB,
+                                ParametersFileErrorInvalidFieldCapacity,
+                                ParametersFileErrorInvalidMacropore,
+                                ParametersFileErrorInvalidImperviousArea,
+                                ParametersFileErrorInvalidFieldCapacityWiltingPoint,
+                                ParametersFileErrorInvalidFieldCapacityPorosity)
 from waterpy import parametersfile
 
 
@@ -107,3 +109,23 @@ def test_parameters_file_invalid_impervious_area_fraction():
         parametersfile.check_impervious_area(invalid_value)
 
     assert "Invalid impervious area" in str(err.value)
+
+
+def test_parameters_file_invalid_field_capacity_fraction_wilting_point_fraction():
+    field_capacity_fraction = 0.2
+    invalid_wilting_point_fraction = 0.4
+    with pytest.raises(ParametersFileErrorInvalidFieldCapacityWiltingPoint) as err:
+        parametersfile.check_field_capacity_wilting_point(field_capacity_fraction,
+                                                          invalid_wilting_point_fraction)
+
+    assert "Invalid field capacity or wilting point" in str(err.value)
+
+
+def test_parameters_file_invalid_field_capacity_fraction_porosity_fraction():
+    field_capacity_fraction = 0.5
+    invalid_porosity_fraction = 0.2
+    with pytest.raises(ParametersFileErrorInvalidFieldCapacityPorosity) as err:
+        parametersfile.check_field_capacity_porosity(field_capacity_fraction,
+                                                     invalid_porosity_fraction)
+
+    assert "Invalid field capacity or porosity" in str(err.value)

@@ -177,6 +177,38 @@ class ParametersFileErrorInvalidImperviousArea(TopmodelpyException):
         )
 
 
+class ParametersFileErrorInvalidFieldCapacityWiltingPoint(TopmodelpyException):
+    """
+    Raised when a file is not a properly formatted parameters csv file.
+    """
+    def __init__(self, invalid_field_capacity, invalid_wilting_point):
+        self.message = (
+            "Error with parameters file.\n"
+            "Invalid field capacity or wilting point:\n"
+            "  field_capacity_fraction: {0}\n"
+            "  wilting_point_fraction: {1}\n"
+            "Valid field capacity or wilting point:\n"
+            "  field_capacity_fraction > witing_point_fraction\n"
+            "".format(invalid_field_capacity, invalid_wilting_point)
+        )
+
+
+class ParametersFileErrorInvalidFieldCapacityPorosity(TopmodelpyException):
+    """
+    Raised when a file is not a properly formatted parameters csv file.
+    """
+    def __init__(self, invalid_field_capacity, invalid_porosity):
+        self.message = (
+            "Error with parameters file.\n"
+            "Invalid field capacity or porosity:\n"
+            "  field_capacity_fraction: {0}\n"
+            "  porosity_fraction: {1}\n"
+            "Valid field capacity or wilting point:\n"
+            "  porosity_fraction > field_capacity_fraction \n"
+            "".format(invalid_field_capacity, invalid_porosity)
+        )
+
+
 class TimeseriesFileErrorInvalidHeader(TopmodelpyException):
     """
     Raised when a file is not a properly formatted timeseries csv file.

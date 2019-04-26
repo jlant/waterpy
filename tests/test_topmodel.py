@@ -29,7 +29,6 @@ def test_topmodel_init(parameters_wolock,
         twi_mean=twi_weighted_mean_wolock,
         precip_available=timeseries_wolock["precip_minus_pet"].values,
         flow_initial=1,
-        soil_depth_roots=1,
         timestep_daily_fraction=1
     )
 
@@ -60,7 +59,7 @@ def test_topmodel_init(parameters_wolock,
     np.testing.assert_allclose(topmodel.precip_available,
                                timeseries_wolock["precip_minus_pet"].values)
     assert(topmodel.flow_initial == 1)
-    assert(topmodel.soil_depth_roots == 1)
+    assert(topmodel.soil_depth_roots == topmodel.soil_depth_ab_horizon)
     assert(topmodel.timestep_daily_fraction == 1)
 
 
@@ -70,15 +69,10 @@ def test_topmodel_run(parameters_wolock,
                       twi_weighted_mean_wolock):
     """Test Topmodel run with input data from Dave Wolock's Topmodel version.
     Note:
-        This version and Wolock's version produce predicted flow values are
-        are close (max difference is 0.047 or 4.7%). However, there are small
-        differences likely due to a slightly different twi mean values and
-        floating point differences from rounding.  This test allows for a
-        small relative tolerance (rtol) of 0.05 for assertions.
-
-    Reference:
-        Python Relative tolerance (rtol) vs Absolute tolerance (atol)
-        https://www.python.org/dev/peps/pep-0485/#defaults
+        Just checking that model runs here.  With changes to the original
+        Topmodel version, there is no direct test data yet to check with.
+        Can inspect the run if need be here by setting a breakpoint and/or
+        printing the topmodel object results.
     """
 
     # Initialize Topmodel
@@ -100,17 +94,6 @@ def test_topmodel_run(parameters_wolock,
         precip_available=timeseries_wolock["precip_minus_pet"].values,
         flow_initial=1,
         timestep_daily_fraction=1,
-        soil_depth_roots=1
     )
 
     topmodel.run()
-
-    diff = (topmodel.flow_predicted
-            - timeseries_wolock["flow_predicted"].values)
-    print("Difference between Lant and Wolock: {}".format(diff))
-    print("Max difference: {}".format(max(diff)))
-    print("The difference occurred at index: {}".format(np.where(diff ==
-                                                                 max(diff))))
-    np.testing.assert_allclose(topmodel.flow_predicted,
-                               timeseries_wolock["flow_predicted"].values,
-                               rtol=0.05)
