@@ -6,8 +6,8 @@ macropore_fraction,0.2,fraction,fraction of precipitation that can bypass the un
 soil_depth_total,1,mm,total soil depth - could be 90 cm for tile depth
 soil_depth_ab_horizon,0.5,mm,soil depth of AB horizon - 25% thickness
 field_capacity_fraction,0.3,fraction,fraction of soil moisture or water content in the soil after excess water has drained away
-porosity,0.4,fraction,fraction of soil that is porous and is always larger than field_capacity_fraction
-wilting_point,0.1,fraction,fraction amount of the minimal amount of water in the soil that plants require not to wilt
+porosity_fraction,0.4,fraction,fraction of soil that is porous and is always larger than field_capacity_fraction
+wilting_point_fraction,0.1,fraction,fraction amount of the minimal amount of water in the soil that plants require not to wilt
 latitude,40.5,degrees,mean latitude of basin
 basin_area_total,3.07,square kilometers,total basin area
 impervious_area_fraction,0.3,fraction,fraction of impervious area of basin

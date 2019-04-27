@@ -29,10 +29,13 @@ class Topmodel:
     def __init__(self,
                  scaling_parameter,
                  saturated_hydraulic_conductivity,
+                 saturated_hydraulic_conductivity_multiplier,
                  macropore_fraction,
                  soil_depth_total,
                  soil_depth_ab_horizon,
                  field_capacity_fraction,
+                 porosity_fraction,
+                 wilting_point_fraction,
                  latitude,
                  basin_area_total,
                  impervious_area_fraction,
@@ -54,11 +57,18 @@ class Topmodel:
 
         # Assign parameters
         self.scaling_parameter = scaling_parameter
-        self.saturated_hydraulic_conductivity = saturated_hydraulic_conductivity
+        self.saturated_hydraulic_conductivity = (
+            saturated_hydraulic_conductivity
+        )
+        self.saturated_hydraulic_conductivity_multiplier = (
+            saturated_hydraulic_conductivity_multiplier
+        )
         self.macropore_fraction = macropore_fraction
         self.soil_depth_total = soil_depth_total
         self.soil_depth_ab_horizon = soil_depth_ab_horizon
         self.field_capacity_fraction = field_capacity_fraction
+        self.porosity_fraction = porosity_fraction
+        self.wilting_point_fraction = wilting_point_fraction
         self.latitude = latitude
         self.basin_area_total = basin_area_total
         self.impervious_area_fraction = impervious_area_fraction
@@ -85,6 +95,10 @@ class Topmodel:
         self.transmissivity_saturated_max = None
         self.flow_subsurface_max = None
         self.root_zone_storage_max = None
+        self.saturated_hydraulic_conductivity_max = None
+        self.available_water_holding_capacity = None
+        self.gravity_drained_porosity = None
+        self.f_param = None
 
         # Channel routing parameters
         self.channel_velocity_avg = None
@@ -160,15 +174,29 @@ class Topmodel:
         )
 
         # Maximum saturated hydraulic transmissivity
-        # Equation 41 in Wolock, 1993
-        # Note: it is assumed that the hydraulic conductivity of the AB
-        # horizon is two orders of magnitude greater than the hydraulic
-        # conductivity of the Z horizon
-        self.transmissivity_saturated_max = (
-            self.soil_depth_ab_horizon * 100
-            * self.saturated_hydraulic_conductivity
-            + self.soil_depth_c_horizon * self.saturated_hydraulic_conductivity
+        # Using same methodology as in the Topmodel version by
+        # Leon Kauffmann (USGS) called KyTopmodel
+        self.saturated_hydraulic_conductivity_max = (
+            self.saturated_hydraulic_conductivity
+            * self.saturated_hydraulic_conductivity_multiplier
         )
+        self.available_water_holding_capacity = (
+            self.field_capacity_fraction - self.wilting_point_fraction
+        )
+        self.gravity_drained_porosity = (
+            self.porosity_fraction - self.available_water_holding_capacity
+        )
+        self.f_param = (
+            math.log(self.saturated_hydraulic_conductivity_multiplier)
+            / self.soil_depth_total
+        )
+        self.transmissivity_saturated_max = (
+            self.saturated_hydraulic_conductivity_max / self.f_param
+        )
+        if self.scaling_parameter < 0:
+            self.scaling_parameter = (
+                self.gravity_drained_porosity / self.f_param * 1000
+            )
 
         # Maximum subsurface flow rate - equation 32 in Wolock, 1993
         self.flow_subsurface_max = (

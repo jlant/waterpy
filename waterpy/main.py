@@ -166,10 +166,15 @@ def run_topmodel(parameters, twi, preprocessed_data):
         saturated_hydraulic_conductivity=(
             parameters["saturated_hydraulic_conductivity"]["value"]
         ),
+        saturated_hydraulic_conductivity_multiplier=(
+            parameters["saturated_hydraulic_conductivity_multiplier"]["value"]
+        ),
         macropore_fraction=parameters["macropore_fraction"]["value"],
         soil_depth_total=parameters["soil_depth_total"]["value"],
         soil_depth_ab_horizon=parameters["soil_depth_ab_horizon"]["value"],
         field_capacity_fraction=parameters["field_capacity_fraction"]["value"],
+        porosity_fraction=parameters["porosity_fraction"]["value"],
+        wilting_point_fraction=parameters["wilting_point_fraction"]["value"],
         latitude=parameters["latitude"]["value"],
         basin_area_total=parameters["basin_area_total"]["value"],
         impervious_area_fraction=parameters["impervious_area_fraction"]["value"],

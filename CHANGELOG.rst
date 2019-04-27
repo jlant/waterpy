@@ -27,3 +27,6 @@ Version 0.1.0
 - topmodel.py: Add new parameters to parameters file with associated checks
   and tests. New parameters added include: wilting_point_fraction,
   porosity_fraction, saturated_hydraulic_conductivity_multiplier
+
+- topmodel.py: Add new transmissivity calculation using methodology from a 
+  version of Topmodel by Leon Kauffman (USGS) called KyTopmodel.

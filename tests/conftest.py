@@ -9,9 +9,8 @@ from pathlib import Path
 
 
 @pytest.fixture(scope="module")
-def timeseries_wolock():
-    """Return a Pandas dataframe of timeseries test data
-    from Dave Wolock's Topmodel version. Test data contains
+def timeseries():
+    """Return a Pandas dataframe of timeseries test data. Test data contains
     input values along with model output values in a single file.
     """
 
@@ -31,9 +30,8 @@ def timeseries_wolock():
 
 
 @pytest.fixture(scope="module")
-def twi_wolock():
-    """Return a Pandas dataframe of twi test data
-    from Dave Wolock's Topmodel version"""
+def twi():
+    """Return a Pandas dataframe of twi test data."""
 
     fname = os.path.join(os.path.dirname(__file__),
                          "testdata/twi_wolock.csv")
@@ -48,9 +46,8 @@ def twi_wolock():
 
 
 @pytest.fixture(scope="module")
-def twi_weighted_mean_wolock():
-    """Return the weighted mean of the twi test data
-    from Dave Wolock's Topmodel version"""
+def twi_weighted_mean():
+    """Return the weighted mean of the twi test data."""
 
     fname = os.path.join(os.path.dirname(__file__),
                          "testdata/twi_wolock.csv")
@@ -70,17 +67,19 @@ def twi_weighted_mean_wolock():
 
 
 @pytest.fixture(scope="module")
-def parameters_wolock():
-    """Return a dictionary of parameter test data
-    from Dave Wolock's Topmodel version"""
+def parameters():
+    """Return a dictionary of parameter test data."""
 
     data = {
         "scaling_parameter": 10,
         "saturated_hydraulic_conductivity": 150,
+        "saturated_hydraulic_conductivity_multiplier": 2,
         "macropore_fraction": 0.2,
         "soil_depth_total": 1,
         "soil_depth_ab_horizon": 0.5,
-        "field_capacity_fraction": 0.2,
+        "field_capacity_fraction": 0.3,
+        "porosity_fraction": 0.4,
+        "wilting_point_fraction": 0.1,
         "latitude": 40.5,
         "basin_area_total": 3.07,
         "impervious_area_fraction": 0.3,

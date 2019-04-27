@@ -6,22 +6,22 @@ import numpy as np
 from waterpy import hydrocalcs
 
 
-def test_pet(parameters_wolock,
-             timeseries_wolock):
+def test_pet(parameters,
+             timeseries):
 
-    dates = np.array(timeseries_wolock["date"].values,
+    dates = np.array(timeseries["date"].values,
                      dtype=np.datetime64).astype(datetime)
     actual = hydrocalcs.pet(
         dates=dates,
-        temperatures=timeseries_wolock["temperature"].values,
-        latitude=parameters_wolock["latitude"],
+        temperatures=timeseries["temperature"].values,
+        latitude=parameters["latitude"],
         method="hamon"
     )
 
     # The absolute tolerance is set because the calculation done in waterpy
     # is a little different than the calculation done in Wolock's version.
     np.testing.assert_allclose(actual,
-                               timeseries_wolock["pet"].values,
+                               timeseries["pet"].values,
                                atol=1.5)
 
 

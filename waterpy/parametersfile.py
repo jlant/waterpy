@@ -67,6 +67,7 @@ def read_in(filestream):
             "units": row["units"].lower().strip(),
             "description": row["description"].strip(),
         }
+
     return data
 
 
@@ -97,9 +98,9 @@ def check_data(data):
     check_macropore(data["macropore_fraction"]["value"])
     check_impervious_area(data["impervious_area_fraction"]["value"])
     check_field_capacity_wilting_point(data["field_capacity_fraction"]["value"],
-                                       data["wilting_point"]["value"])
+                                       data["wilting_point_fraction"]["value"])
     check_field_capacity_porosity(data["field_capacity_fraction"]["value"],
-                                  data["porosity"]["value"])
+                                  data["porosity_fraction"]["value"])
 
 
 def check_scaling_parameter(value):
