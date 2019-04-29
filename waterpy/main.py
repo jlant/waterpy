@@ -73,7 +73,6 @@ def preprocess(config_data, parameters, timeseries, twi):
         - Snowmelt routine requires temperatures in Fahrenheit.
         - The temperature cutoff from the parameters dict is in Fahrenheit.
         - snowprecip is the adjusted precipitation from snowmelt.
-        - The snowmelt and snowpack variables are not used at this time.
     Calculate the difference between the adjusted precip and pet for Topmodel.
     Calculate the weighted twi mean for Topmodel.
 
@@ -111,11 +110,14 @@ def preprocess(config_data, parameters, timeseries, twi):
     # between the adjusted precip with pet.
     # Otherwise, just compute the difference between the original precip with
     # pet.
-    snowprecip, snowmelt, snowpack = None, None, None
+    snowprecip = None
+    snowmelt = None
+    snowpack = None
+    snow_water_equivalence = None
     if config_data["Options"].getboolean("option_snowmelt"):
         # Calculate the adjusted precipitation based on snowmelt
         # Note: snowmelt function needs temperatures in Fahrenheit
-        snowprecip, snowmelt, snowpack = hydrocalcs.snowmelt(
+        snowprecip, snowmelt, snowpack, snow_water_equivalence = hydrocalcs.snowmelt(
             timeseries["precipitation"].to_numpy(),
             timeseries["temperature"].to_numpy() * (9/5) + 32,
             parameters["snowmelt_temperature_cutoff"]["value"],
@@ -143,6 +145,7 @@ def preprocess(config_data, parameters, timeseries, twi):
         "snowprecip": snowprecip,
         "snowmelt": snowmelt,
         "snowpack": snowpack,
+        "snow_water_equivalence": snow_water_equivalence,
         "twi_weighted_mean": twi_weighted_mean,
     }
 
@@ -251,6 +254,9 @@ def get_output_data(timeseries, preprocessed_data, topmodel_data):
 
     if preprocessed_data["snowprecip"] is not None:
         output_data["snowprecip (mm/day)"] = preprocessed_data["snowprecip"]
+        output_data["snowmelt (mm/day)"] = preprocessed_data["snowmelt"]
+        output_data["snowpack (mm/day)"] = preprocessed_data["snowpack"]
+        output_data["snow_water_equivalence (mm/day)"] = preprocessed_data["snow_water_equivalence"]
 
     if "pet" in timeseries.columns:
         output_data["pet (mm/day)"] = timeseries["pet"].to_numpy()

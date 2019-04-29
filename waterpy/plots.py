@@ -153,6 +153,7 @@ def plot_timeseries(dates, values, label, filename):
             bbox=patch_properties)
 
     plt.savefig(filename, format="png")
+    plt.close()
 
 
 def plot_timeseries_comparison(dates, observed, modeled, label, filename):

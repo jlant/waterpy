@@ -162,6 +162,27 @@ def snowmelt(precipitation,
              timestep_daily_fraction):
     """Snow melt routine.
 
+    Uses snow water equivalence which is the amount of water contained
+    within the snowpack. Snow water equivalence is assumed to be 10% of
+    the snow water density.
+
+    In addition to melting from the "top" of the snow pack due to temperature,
+    it is assumed that some melting occurs at the "bottom" of the snow pack
+    each day regardless of temperature due to geothermal energy as mentioned
+    from:
+
+    Heat conducted from the ground becomes an energy source, which in
+    turn causes snow melt from bottom of snowpack. Male and Gray estimated melt
+    rates on the order of 0.025 to 0.076 cm/day. (0.25 -0.76 mm)
+
+    Dingman estimated the ground melt parameter default ~ 0.35 mm
+
+    Dingman S.L.(2002) Physical Hydrology Printace Hall 2nd ed.
+
+    Male D.H. and Gray D.M.(1981) "Snowcover Ablation and Runoff" in Handbook
+    of Snow" Principles Processes, Management and Use, D.M. Gray and D.H. Male,
+    ed., Pergamon Press:360-436
+
     :param precipitation: Precipitation rates, in millimeters per day
     :type precipitation: numpy.ndarray
     :param temperatures: Temperatures, in degrees Fahrenheit
@@ -178,10 +199,14 @@ def snowmelt(precipitation,
     :param timestep_daily_fraction: Model timestep as a fraction of a day
     :type timestep_daily_fraction: float
     :return: Tuple of arrays of adjusted precipitation, snowmelt,
-             and snowpack values, each array is in millimeters per day
+             snowpack values, and snow water equivalence, each array
+             is in millimeters per day
     :rtype: Tuple
 
     """
+    # Snow water equivalence is assumed to be 10% of the snow water density.
+    snow_water_equivalence_factor = 0.1
+
     precip_inches = precipitation / 25.4  # mm to inches
 
     snowprecip = []
@@ -227,14 +252,35 @@ def snowmelt(precipitation,
             # Remove the amount of snowmelt from the snowpack,
             # and add the amount of snowmelt to the current precip amount
             snowpack = snowpack - snowmelt
-            precip_inch = precip_inch + snowmelt
+            precip_inch = precip_inch + (
+                snowmelt * snow_water_equivalence_factor
+            )
 
         # If temp is too cold for melting, then add the precip (snow) amount
         # to the snow pack and assume no water infiltrates on cold days by
         # setting precip to zero
         else:
-            snowpack = snowpack + precip_inch
+            snowpack = snowpack + (precip_inch / snow_water_equivalence_factor)
             precip_inch = 0
+
+        # Apply geothermal melting from "bottom" of snow pack
+        # Note: 0.51 mm/day (or 0.02 inches/day) is the midway point between
+        # range of estimated melt rates from Male and Gray (see reference
+        # in docstring). Male and Gray estimated melt rates on the order of
+        # 0.025 to 0.076 cm/day or
+        # 0.25 to 0.76 mm/day or
+        # 0.01 to 0.03 inches/day
+        melt_rate_male_gray = 0.02  # inches/day
+        if snowpack >= melt_rate_male_gray:
+            snowpack = snowpack - melt_rate_male_gray
+            precip_inch = precip_inch + (
+                melt_rate_male_gray * snow_water_equivalence_factor
+            )
+        else:
+            precip_inch = precip_inch + (
+                snowpack * snow_water_equivalence_factor
+            )
+            snowpack = 0
 
         snowprecip.append(precip_inch)
         snowmelts.append(snowmelt)
@@ -244,7 +290,9 @@ def snowmelt(precipitation,
     snowmelts = np.array(snowmelts) * 25.4  # inches to mm
     snowpacks = np.array(snowpacks) * 25.4  # inches to mm
 
-    return snowprecip, snowmelts, snowpacks
+    snow_water_equivalence = snowpacks * snow_water_equivalence_factor
+
+    return snowprecip, snowmelts, snowpacks, snow_water_equivalence
 
 
 def snowmelt_rain_on_snow_heavily_forested(precipitation,
