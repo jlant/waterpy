@@ -39,11 +39,11 @@ def waterpy(configfile, options):
     parameters, timeseries, twi = read_input_files(config_data)
 
     preprocessed_data = preprocess(config_data, parameters, timeseries, twi)
-    topmodel_data = run_topmodel(parameters, twi, preprocessed_data)
+    topmodel_data = run_topmodel(config_data, parameters, twi, preprocessed_data)
     postprocess(config_data, timeseries, preprocessed_data, topmodel_data)
 
 
-def read_input_files(configdata):
+def read_input_files(config_data):
     """Read input files from model configuration file.
 
     Returns a tuple of:
@@ -51,14 +51,14 @@ def read_input_files(configdata):
         pandas.DataFrame from timeseries file
         pandas.DataFrame from twi file
 
-    :param config: A ConfigParser object that behaves much like a dictionary.
-    :type config: ConfigParser
+    :param config_data: A ConfigParser object that behaves much like a dictionary.
+    :type config_data: ConfigParser
     :return: Tuple of parameters dict, timeseries dataframe, twi dataframe
     :rtype: tuple
     """
-    parameters = parametersfile.read(configdata["Inputs"]["parameters_file"])
-    timeseries = timeseriesfile.read(configdata["Inputs"]["timeseries_file"])
-    twi = twifile.read(configdata["Inputs"]["twi_file"])
+    parameters = parametersfile.read(config_data["Inputs"]["parameters_file"])
+    timeseries = timeseriesfile.read(config_data["Inputs"]["timeseries_file"])
+    twi = twifile.read(config_data["Inputs"]["twi_file"])
 
     return parameters, timeseries, twi
 
@@ -77,6 +77,8 @@ def preprocess(config_data, parameters, timeseries, twi):
     Calculate the difference between the adjusted precip and pet for Topmodel.
     Calculate the weighted twi mean for Topmodel.
 
+    :param config_data: A ConfigParser object that behaves much like a dictionary.
+    :type config_data: ConfigParser
     :param parameters: The parameters for the model.
     :type parameters: Dict
     :param timeseries: A dataframe of all the timeseries data.
@@ -147,9 +149,11 @@ def preprocess(config_data, parameters, timeseries, twi):
     return preprocessed_data
 
 
-def run_topmodel(parameters, twi, preprocessed_data):
+def run_topmodel(config_data, parameters, twi, preprocessed_data):
     """Run Topmodel.
 
+    :param config_data: A ConfigParser object that behaves much like a dictionary.
+    :type config_data: ConfigParser
     :param parameters: The parameters for the model.
     :type parameters: Dict
     :param twi: A dataframe of all the twi data.
@@ -183,7 +187,8 @@ def run_topmodel(parameters, twi, preprocessed_data):
         twi_saturated_areas=twi["proportion"].to_numpy(),
         twi_mean=preprocessed_data["twi_weighted_mean"],
         precip_available=preprocessed_data["precip_minus_pet"],
-        timestep_daily_fraction=preprocessed_data["timestep_daily_fraction"]
+        timestep_daily_fraction=preprocessed_data["timestep_daily_fraction"],
+        option_channel_routing=config_data["Options"].getboolean("option_channel_routing")
     )
 
     # Run Topmodel

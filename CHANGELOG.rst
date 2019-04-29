@@ -9,6 +9,10 @@ Version 0.1.0
 
 Version 0.1.0
 -------------
+(add features, released on 2019-04-29)
+
+- topmodel.py: Add channel routing option to model config file.
+
 (add features, released on 2019-04-26)
 
 - topmodel.py: Set the soil depth of the roots to equal the soil depth of the

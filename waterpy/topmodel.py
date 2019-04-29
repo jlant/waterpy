@@ -44,7 +44,8 @@ class Topmodel:
                  twi_mean,
                  precip_available,
                  flow_initial=1,
-                 timestep_daily_fraction=1):
+                 timestep_daily_fraction=1,
+                 option_channel_routing=True):
 
         # Check and assign timestep daily fraction
         if timestep_daily_fraction > 1:
@@ -101,6 +102,7 @@ class Topmodel:
         self.f_param = None
 
         # Channel routing parameters
+        self.option_channel_routing = option_channel_routing
         self.channel_velocity_avg = None
         self.channel_length_max = None
         self.channel_travel_time = None
@@ -213,22 +215,29 @@ class Topmodel:
         )
 
     def _initialize_channel_routing_parameters(self):
-        """Initialize the channel routing parameters."""
+        """Initialize the channel routing parameters.
 
-        # Channel velocity
-        self.channel_velocity_avg = 10 * self.timestep_daily_fraction
+        If channel routing option is turned on, then calculate channel travel
+        time, otherwise, set channel travel time to 1 day.
+        """
 
-        # Channel length maximum approximation as 2 * radius of circle
-        self.channel_length_max = 2 * np.sqrt(self.basin_area_total / np.pi)
+        if self.option_channel_routing:
+            # Channel velocity
+            self.channel_velocity_avg = 10 * self.timestep_daily_fraction
 
-        # Equation 38 in Wolock, 1993
-        self.channel_travel_time = (
-            self.channel_length_max / self.channel_velocity_avg
-        )
+            # Channel length maximum approximation as 2 * radius of circle
+            self.channel_length_max = 2 * np.sqrt(self.basin_area_total / np.pi)
 
-        # Wolock's topmodel code includes the following; is this to
-        # prevent water from being routed before the end of the timestep?
-        self.channel_travel_time = max(self.channel_travel_time, 1)
+            # Equation 38 in Wolock, 1993
+            self.channel_travel_time = (
+                self.channel_length_max / self.channel_velocity_avg
+            )
+
+            # Wolock's topmodel code includes the following; is this to
+            # prevent water from being routed before the end of the timestep?
+            self.channel_travel_time = max(self.channel_travel_time, 1)
+        else:
+            self.channel_travel_time = 1
 
     def _initialize_watershed_average_storage_deficit(self):
         """Calculate the watershed average storage deficit."""
