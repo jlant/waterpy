@@ -5,6 +5,10 @@ Changelog
 Version 0.1.0
 -------------
 
+2019-05-03
+----------
+- topmodel.py: Add SCS runoff curve number calculation to hydrocals.py.
+
 2019-04-29
 ----------
 - topmodel.py: Add new snow melt routine with the addition of snow water 
