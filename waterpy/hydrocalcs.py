@@ -17,7 +17,7 @@ https://www.nrcs.usda.gov/Internet/FSE_DOCUMENTS/stelprdb1044171.pdf
 import numpy as np
 
 
-def pet(dates, temperatures, latitude, method="hamon"):
+def pet(dates, temperatures, latitude, calib_coeff, method="hamon"):
     """Calculate potential evapotranspiration for various methods.
 
     :param dates: An array of python datetimes
@@ -26,14 +26,16 @@ def pet(dates, temperatures, latitude, method="hamon"):
     :type temperatures: numpy.ndarray
     :param latitude: A latitude, in decimal degrees
     :type latitude: float
+    :param calib_coeff: Calibration coefficient (KPEC), dimensionless
+    :type calib_coeff: float
     :return pet: array of pet values, in millimeters per day
     :rtype pet: numpy.ndarray
     """
     if method.lower() == "hamon":
-        return pet_hamon(dates, temperatures, latitude)
+        return pet_hamon(dates, temperatures, latitude, calib_coeff)
 
 
-def pet_hamon(dates, temperatures, latitude):
+def pet_hamon(dates, temperatures, latitude, calib_coeff=1.2):
     """Calculate the amount of potential evapotranspiration in millimeters
     per day using the Hamon equation.
 
@@ -43,6 +45,8 @@ def pet_hamon(dates, temperatures, latitude):
     :type temps: numpy.ndarray
     :param latitude: A latitude, in decimal degrees
     :type latitude: float
+    :param calib_coeff: Calibration coefficient (KPEC), dimensionless
+    :type calib_coeff: float
     :return pet: array of pet values, in millimeters per day
     :rtype pet: numpy.ndarray
 
@@ -59,7 +63,7 @@ def pet_hamon(dates, temperatures, latitude):
            RHOSAT       saturated vapor density at the daily mean air
                         temperature (T), g/m**3
            KPEC         calibration coefficient, dimensionless
-                        set to 1.2 for southeastern United States
+                        set to 1.2 for Southeastern United States
 
        Sub-equations:
 
@@ -115,7 +119,6 @@ def pet_hamon(dates, temperatures, latitude):
 
     DEG2RAD = np.pi/180
     RAD2DEG = 180/np.pi
-    CALIBCOEFF = 1.2
 
     pet = []
     for date, temperature in zip(dates, temperatures):
@@ -147,7 +150,7 @@ def pet_hamon(dates, temperatures, latitude):
 
         # calculate potential evapotranspiration
         potential_evapotranspiration = (
-            0.1651 * daytime_length * saturated_vapor_density * CALIBCOEFF
+            0.1651 * daytime_length * saturated_vapor_density * calib_coeff
         )
 
         # add to list

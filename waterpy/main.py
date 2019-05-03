@@ -102,6 +102,7 @@ def preprocess(config_data, parameters, timeseries, twi):
             dates=timeseries.index.to_pydatetime(),
             temperatures=timeseries["temperature"].to_numpy(),
             latitude=parameters["latitude"]["value"],
+            calib_coeff=parameters["pet_calib_coeff"]["value"],
             method="hamon"
         )
         pet = pet * timestep_daily_fraction
