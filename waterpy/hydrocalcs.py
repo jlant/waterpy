@@ -7,6 +7,11 @@ Engineering and Design - Runoff from Snowmelt
 U.S. Army Corps of Engineers
 Engineering Manual 1110-2-1406
 https://www.wcc.nrcs.usda.gov/ftpref/wntsc/H&H/snow/COEemSnowmeltRunoff.pdf
+
+Estimating Runoff
+U.S. Department of Agriculture - Urban Hydrology for Small Watersheds
+Technical Release 55 (TR55), June 1986
+https://www.nrcs.usda.gov/Internet/FSE_DOCUMENTS/stelprdb1044171.pdf
 """
 
 import numpy as np
@@ -446,6 +451,65 @@ def snowmelt_temperature_index(temperatures,
     https://www.wcc.nrcs.usda.gov/ftpref/wntsc/H&H/snow/COEemSnowmeltRunoff.pdf
     """
     return melt_rate_coeff * (temperatures - temperature_cutoff)
+
+
+def runoff(precipitation, curve_number):
+    """Calculate the amount of runoff using the SCS runoff curve number method.
+
+    :param temperatures: precipitation, in mm
+    :type precipitation: numpy.ndarray
+    :param curve_number: curve number, dimensionless
+    :type precipitation: float
+    :return runoff: runoff, in mm
+    :rtype runoff: numpy.ndarray
+
+    .. note::
+
+    Equation:
+
+    Q = (P - I_a)**2 / ((P - I_a) + S)
+
+    where
+
+    Q           runoff, inches
+    P           rainfall, inches
+    S           potential maximum retention after runoff begins, inches
+    I_a         initial abstraction, inches
+
+    using approximation
+
+    I_a = 0.2 * S
+
+    and
+
+    S = (1000 / CN) - 10
+
+    where
+
+    CN          curve number [0-100], dimensionless
+
+    Refactored Equation:
+
+    Q = (P - 0.2*S)**2 / (P + 0.8*S)
+
+
+    Reference:
+
+    Estimating Runoff
+    U.S. Department of Agriculture - Urban Hydrology for Small Watersheds
+    Technical Release 55 (TR55), June 1986
+    https://www.nrcs.usda.gov/Internet/FSE_DOCUMENTS/stelprdb1044171.pdf
+    """
+    precip_inches = precipitation / 25.4  # mm to inches
+
+    potential_retention = (1000 / curve_number) - 10
+    runoff_inches = (
+        (precip_inches - 0.2 * potential_retention)**2
+        / (precip_inches + 0.8 * potential_retention)
+    )
+    runoff = runoff_inches * 25.4  # inches to mm
+
+    return runoff
 
 
 def weighted_mean(values, weights):
