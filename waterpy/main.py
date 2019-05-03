@@ -39,7 +39,7 @@ def waterpy(configfile, options):
     parameters, timeseries, twi = read_input_files(config_data)
 
     preprocessed_data = preprocess(config_data, parameters, timeseries, twi)
-    topmodel_data = run_topmodel(config_data, parameters, twi, preprocessed_data)
+    topmodel_data = run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data)
     postprocess(config_data, timeseries, preprocessed_data, topmodel_data)
 
 
@@ -152,7 +152,7 @@ def preprocess(config_data, parameters, timeseries, twi):
     return preprocessed_data
 
 
-def run_topmodel(config_data, parameters, twi, preprocessed_data):
+def run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data):
     """Run Topmodel.
 
     :param config_data: A ConfigParser object that behaves much like a dictionary.
@@ -190,6 +190,7 @@ def run_topmodel(config_data, parameters, twi, preprocessed_data):
         twi_saturated_areas=twi["proportion"].to_numpy(),
         twi_mean=preprocessed_data["twi_weighted_mean"],
         precip_available=preprocessed_data["precip_minus_pet"],
+        temperatures=timeseries["temperature"].to_numpy(),
         timestep_daily_fraction=preprocessed_data["timestep_daily_fraction"],
         option_channel_routing=config_data["Options"].getboolean("option_channel_routing")
     )

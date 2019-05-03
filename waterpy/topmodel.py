@@ -1,16 +1,26 @@
 """Topmodel class
 Class that represents an implementation of a rainfall-runoff model,
-called Topmodel, based on a `U.S. Geological Survey`_ version by
-David Wolock (please see `[1]`_).
+called Topmodel, based initially on a `U.S. Geological Survey`_ version by
+David Wolock (please see `[1]`_). Some modifications have been added in an
+attempt to replicate Topmodel versions by Leon Kaufmann (KyTopmodel) and 
+Tanja Williamson (WATER, please see `[2]`_)
 
 Please see table in docs directory called "lant-to-wolock-conversion-table.rst"
 which contains variable descriptions and units
+
 
 .. [1] Wolock, D.M., "Simulating the variable-source-area concept of
 streamflow generation with the watershed model Topmodel", U.S. Geological
 Survey, Water-Resources Investigations Report 93-4124, 1993.
 
 .. _U.S. Geological Survey: https://www.usgs.gov
+
+.. [2] Williamson, T.N., Lant, J.G., Claggett, P.R., Nystrom, E.A.,
+Milly, P.C.D., Nelson, H.L., Hoffman, S.A., Colarullo, S.J., and Fischer, J.M.,
+2015, Summary of hydrologic modeling for the Delaware River Basin using the
+Water Availability Tool for Environmental Resources (WATER): U.S. Geological
+Survey Scientific Investigations Report 2015–5143, 68 p.,
+http://dx.doi.org/10.3133/sir20155143
 
 :authors: 2019 by Jeremiah Lant, see AUTHORS
 :license: CC0 1.0, see LICENSE file for details
@@ -43,6 +53,7 @@ class Topmodel:
                  twi_saturated_areas,
                  twi_mean,
                  precip_available,
+                 temperatures,
                  flow_initial=1,
                  timestep_daily_fraction=1,
                  option_channel_routing=True):
@@ -129,12 +140,16 @@ class Topmodel:
         self.saturation_deficit_locals = utils.nans((self.num_timesteps,
                                                      self.num_twi_increments))
 
+        # Temperatures used to set exponent for new evaporation calculation
+        self.temperatures = temperatures
+
         self.saturation_deficit_local = None
         self.precip_for_evaporation = None
         self.precip_for_recharge = None
         self.precip_excesses = None
         self.precip_excess = None
         self.evaporation = None
+        self.et_exponent = None
         self.flow_predicted_overland = None
         self.flow_predicted_vertical_drainage_flux = None
         self.flow_predicted_subsurface = None
@@ -289,6 +304,14 @@ class Topmodel:
                 )
             elif self.precip_available[i] > 0:
                 self.precip_for_recharge = self.precip_available[i]
+
+            # Set the et_exponent based on current temperature
+            # Temperature > 15 degrees Celsius means growth
+            # Tempearture <= 15 degrees Celsius means dormant
+            if self.temperatures[i] > 15:
+                self.et_exponent = 0.5
+            else:
+                self.et_exponent = 5
 
             # Start of twi increments loop
             for j in range(self.num_twi_increments):
@@ -450,8 +473,13 @@ class Topmodel:
                 # =======================================
                 # If there is precipitation available for evaporation,
                 # then compute evaporation.
+                # Note: Evaporation is calculated using AET formula from
+                # Table 2 of USGS SIR 20155143 (see reference [2] in
+                # module docstring)
                 if self.precip_for_evaporation > 0:
-                    self.evaporation = self.precip_for_evaporation
+                    self.evaporation = self.precip_for_evaporation * (
+                        (self.root_zone_storage[j] / self.root_zone_storage_max)**self.et_exponent
+                    )
 
                     # If the precipitation available for evapotranspiration is
                     # greater than the soil root zone storage amount, then
