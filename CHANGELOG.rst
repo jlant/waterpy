@@ -5,6 +5,10 @@ Changelog
 Version 0.1.0
 -------------
 
+2019-05-06
+----------
+- topmodel.py: Add flow duration curves to output.
+
 2019-05-03
 ----------
 - topmodel.py: Add pet calibration coefficient (KPEC) to parameters file
