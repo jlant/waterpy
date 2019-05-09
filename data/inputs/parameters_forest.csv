@@ -1,6 +1,5 @@
 name,value,units,description
 spatial_coeff,0.4,dimensionless,used to calculate the scaling parameter
-twi_adjustment,1,dimensionless,adjusts twi values
 rooting_depth_factor,0.75,dimensionless,proportion of soil thickness used for evapotranspiration
 macropore_fraction,0.15,fraction,fraction of precipitation that can bypass the unsaturated subsurface zone and move directly into the saturated subsurface zone
 water_body_delay,15,days,water body delay
