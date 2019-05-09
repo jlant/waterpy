@@ -190,7 +190,7 @@ def run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data):
         ),
         macropore_fraction=parameters["land_type"]["macropore_fraction"]["value"],
         soil_depth_total=parameters["basin"]["soil_depth_total"]["value"],
-        soil_depth_ab_horizon=parameters["basin"]["soil_depth_ab_horizon"]["value"],
+        rooting_depth_factor=parameters["land_type"]["rooting_depth_factor"]["value"],
         field_capacity_fraction=parameters["basin"]["field_capacity_fraction"]["value"],
         porosity_fraction=parameters["basin"]["porosity_fraction"]["value"],
         wilting_point_fraction=parameters["basin"]["wilting_point_fraction"]["value"],

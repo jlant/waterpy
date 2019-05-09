@@ -42,7 +42,7 @@ class Topmodel:
                  saturated_hydraulic_conductivity_multiplier,
                  macropore_fraction,
                  soil_depth_total,
-                 soil_depth_ab_horizon,
+                 rooting_depth_factor,
                  field_capacity_fraction,
                  porosity_fraction,
                  wilting_point_fraction,
@@ -76,7 +76,7 @@ class Topmodel:
         )
         self.macropore_fraction = macropore_fraction
         self.soil_depth_total = soil_depth_total
-        self.soil_depth_ab_horizon = soil_depth_ab_horizon
+        self.rooting_depth_factor = rooting_depth_factor
         self.field_capacity_fraction = field_capacity_fraction
         self.porosity_fraction = porosity_fraction
         self.wilting_point_fraction = wilting_point_fraction
@@ -98,8 +98,9 @@ class Topmodel:
 
         # Soil hydraulic variables
         # Note: soil depth of root zone set to soil depth of AB horizon
-        self.soil_depth_roots = soil_depth_ab_horizon
-        self.soil_depth_c_horizon = None
+        self.soil_depth_roots = (
+            self.soil_depth_total * self.rooting_depth_factor
+        )
         self.vertical_drainage_flux_initial = None
         self.vertical_drainage_flux = None
         self.transmissivity_saturated_max = None
@@ -177,10 +178,6 @@ class Topmodel:
 
         if self.soil_depth_roots > self.soil_depth_total:
             self.soil_depth_roots = self.soil_depth_total
-
-        self.soil_depth_c_horizon = (
-            self.soil_depth_total - self.soil_depth_ab_horizon
-        )
 
         # Initial vertical drainage flux as saturated hydraulic conductivity
         self.vertical_drainage_flux_initial = (
