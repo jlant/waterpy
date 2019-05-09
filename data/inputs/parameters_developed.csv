@@ -2,9 +2,6 @@ name,value,units,description
 spatial_coeff,0.25,dimensionless,used to calculate the scaling parameter
 rooting_depth_factor,0.75,dimensionless,proportion of soil thickness used for evapotranspiration
 macropore_fraction,0.2,fraction,fraction of precipitation that can bypass the unsaturated subsurface zone and move directly into the saturated subsurface zone
-water_body_delay,1.5,days,water body delay
-impervious_effective,1,dimensionless,changes total impervious area
-impervious_runoff_delay,0.1,dimensionless,proportion of precip delayed to next day
 impervious_curve_number,100,dimensionless,TR55 parameter
 snowmelt_temperature_cutoff,32,degrees fahrenheit,temperature cutoff for snowpack accumulation and snowmelt
 snowmelt_rate_coeff,0.06,1/degrees fahrenheit,used to control rate of snow melt

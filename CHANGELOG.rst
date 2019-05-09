@@ -15,6 +15,9 @@ Version 0.1.0
 
 - Add new calculation for soil depth of the root zone using the new parameter
   called rooting_depth_factor 
+ 
+- Change the calculation for the predicted impervious area flow by using TR55
+  SCS curve number method instead of using Equation 37 in Wolock paper from 1993.
 
 2019-05-06
 ----------

@@ -196,6 +196,7 @@ def run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data):
         wilting_point_fraction=parameters["basin"]["wilting_point_fraction"]["value"],
         basin_area_total=parameters["basin"]["basin_area_total"]["value"],
         impervious_area_fraction=parameters["basin"]["impervious_area_fraction"]["value"],
+        impervious_curve_number=parameters["land_type"]["impervious_curve_number"]["value"],
         flow_initial=parameters["basin"]["flow_initial"]["value"],
         twi_values=twi["twi"].to_numpy(),
         twi_saturated_areas=twi["proportion"].to_numpy(),

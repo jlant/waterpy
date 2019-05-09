@@ -29,6 +29,7 @@ http://dx.doi.org/10.3133/sir20155143
 import math
 import numpy as np
 
+from . import hydrocalcs
 from . import utils
 
 
@@ -48,6 +49,7 @@ class Topmodel:
                  wilting_point_fraction,
                  basin_area_total,
                  impervious_area_fraction,
+                 impervious_curve_number,
                  twi_values,
                  twi_saturated_areas,
                  twi_mean,
@@ -82,6 +84,7 @@ class Topmodel:
         self.wilting_point_fraction = wilting_point_fraction
         self.basin_area_total = basin_area_total
         self.impervious_area_fraction = impervious_area_fraction
+        self.impervious_curve_number = impervious_curve_number
 
         # Assign twi
         self.twi_values = twi_values
@@ -547,10 +550,17 @@ class Topmodel:
             # Impervious area flow
             # ====================
             # Calculate the contribution of impervious areas to streamflow -
-            # equation 37 in Wolock, 1993
-            self.flow_predicted_impervious_area = (
-                self.impervious_area_fraction * self.precip_for_recharge
-            )
+            # using TR55 SCS Curve Number method instead of
+            # equation 37 in Wolock, 1993.
+            # If there is water available, then calculate the
+            # impervious area flow otherwise there is no impervious area flow
+            if self.precip_for_recharge > 0:
+                self.flow_predicted_impervious_area = (
+                    hydrocalcs.runoff(self.precip_for_recharge,
+                                      self.impervious_curve_number)
+                )
+            else:
+                self.flow_predicted_impervious_area = 0
 
             # Total flow
             # ==========
