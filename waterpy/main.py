@@ -142,6 +142,12 @@ def preprocess(config_data, parameters, timeseries, twi):
     twi_weighted_mean = hydrocalcs.weighted_mean(values=twi["twi"],
                                                  weights=twi["proportion"])
 
+    # Adjust the scaling parameter by the spatial coefficient
+    scaling_parameter_adjusted = (
+        parameters["basin"]["scaling_parameter"]["value"]
+        * parameters["land_type"]["spatial_coeff"]["value"]
+    )
+
     # Return a dict of calculated data
     preprocessed_data = {
         "timestep_daily_fraction": timestep_daily_fraction,
@@ -152,6 +158,7 @@ def preprocess(config_data, parameters, timeseries, twi):
         "snowpack": snowpack,
         "snow_water_equivalence": snow_water_equivalence,
         "twi_weighted_mean": twi_weighted_mean,
+        "scaling_parameter_adjusted": scaling_parameter_adjusted
     }
 
     return preprocessed_data
@@ -174,7 +181,7 @@ def run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data):
     """
     # Initialize Topmodel
     topmodel = Topmodel(
-        scaling_parameter=parameters["basin"]["scaling_parameter"]["value"],
+        scaling_parameter=preprocessed_data["scaling_parameter_adjusted"],
         saturated_hydraulic_conductivity=(
             parameters["basin"]["saturated_hydraulic_conductivity"]["value"]
         ),

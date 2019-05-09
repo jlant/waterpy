@@ -11,6 +11,8 @@ Version 0.1.0
   the other file is specific for the land type (parameters_forest.csv,
   parameters_agriculture.csv, parameters_developed.csv).
 
+- Add calculation to adjust the scaling parameter by the spatial coefficient. 
+
 2019-05-06
 ----------
 - Add flow duration curves to output.
