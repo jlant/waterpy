@@ -556,8 +556,11 @@ class Topmodel:
             # impervious area flow otherwise there is no impervious area flow
             if self.precip_for_recharge > 0:
                 self.flow_predicted_impervious_area = (
-                    hydrocalcs.runoff(self.precip_for_recharge,
-                                      self.impervious_curve_number)
+                    hydrocalcs.runoff(
+                        precipitation=(self.impervious_area_fraction
+                                       * self.precip_for_recharge),
+                        curve_number=self.impervious_curve_number
+                    )
                 )
             else:
                 self.flow_predicted_impervious_area = 0

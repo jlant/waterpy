@@ -18,6 +18,8 @@ Version 0.1.0
  
 - Change the calculation for the predicted impervious area flow by using TR55
   SCS curve number method instead of using Equation 37 in Wolock paper from 1993.
+  The percentage of precipitation used for the TR55 runoff calculation is:
+  impervious_area_fraction * precip_available_recharge
 
 2019-05-06
 ----------
