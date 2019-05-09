@@ -13,6 +13,9 @@ Version 0.1.0
 
 - Add calculation to adjust the scaling parameter by the spatial coefficient. 
 
+- Add new calculation for soil depth of the root zone using the new parameter
+  called rooting_depth_factor 
+
 2019-05-06
 ----------
 - Add flow duration curves to output.
