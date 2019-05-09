@@ -37,7 +37,6 @@ def waterpy(configfile, options):
     """
     config_data = modelconfigfile.read(configfile)
     parameters, timeseries, twi = read_input_files(config_data)
-
     preprocessed_data = preprocess(config_data, parameters, timeseries, twi)
     topmodel_data = run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data)
     postprocess(config_data, timeseries, preprocessed_data, topmodel_data)
@@ -56,7 +55,12 @@ def read_input_files(config_data):
     :return: Tuple of parameters dict, timeseries dataframe, twi dataframe
     :rtype: tuple
     """
-    parameters = parametersfile.read(config_data["Inputs"]["parameters_file"])
+    parameters_basin = parametersfile.read(config_data["Inputs"]["parameters_basin_file"])
+    parameters_land_type = parametersfile.read(config_data["Inputs"]["parameters_land_type_file"])
+    parameters = {
+        "basin": parameters_basin,
+        "land_type": parameters_land_type,
+    }
     timeseries = timeseriesfile.read(config_data["Inputs"]["timeseries_file"])
     twi = twifile.read(config_data["Inputs"]["twi_file"])
 
@@ -101,8 +105,8 @@ def preprocess(config_data, parameters, timeseries, twi):
         pet = hydrocalcs.pet(
             dates=timeseries.index.to_pydatetime(),
             temperatures=timeseries["temperature"].to_numpy(),
-            latitude=parameters["latitude"]["value"],
-            calib_coeff=parameters["pet_calib_coeff"]["value"],
+            latitude=parameters["basin"]["latitude"]["value"],
+            calib_coeff=parameters["land_type"]["pet_calib_coeff"]["value"],
             method="hamon"
         )
         pet = pet * timestep_daily_fraction
@@ -121,9 +125,9 @@ def preprocess(config_data, parameters, timeseries, twi):
         snowprecip, snowmelt, snowpack, snow_water_equivalence = hydrocalcs.snowmelt(
             timeseries["precipitation"].to_numpy(),
             timeseries["temperature"].to_numpy() * (9/5) + 32,
-            parameters["snowmelt_temperature_cutoff"]["value"],
-            parameters["snowmelt_rate_coeff_with_rain"]["value"],
-            parameters["snowmelt_rate_coeff"]["value"],
+            parameters["land_type"]["snowmelt_temperature_cutoff"]["value"],
+            parameters["land_type"]["snowmelt_rate_coeff_with_rain"]["value"],
+            parameters["land_type"]["snowmelt_rate_coeff"]["value"],
             timestep_daily_fraction
         )
 
@@ -170,23 +174,22 @@ def run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data):
     """
     # Initialize Topmodel
     topmodel = Topmodel(
-        scaling_parameter=parameters["scaling_parameter"]["value"],
+        scaling_parameter=parameters["basin"]["scaling_parameter"]["value"],
         saturated_hydraulic_conductivity=(
-            parameters["saturated_hydraulic_conductivity"]["value"]
+            parameters["basin"]["saturated_hydraulic_conductivity"]["value"]
         ),
         saturated_hydraulic_conductivity_multiplier=(
-            parameters["saturated_hydraulic_conductivity_multiplier"]["value"]
+            parameters["basin"]["saturated_hydraulic_conductivity_multiplier"]["value"]
         ),
-        macropore_fraction=parameters["macropore_fraction"]["value"],
-        soil_depth_total=parameters["soil_depth_total"]["value"],
-        soil_depth_ab_horizon=parameters["soil_depth_ab_horizon"]["value"],
-        field_capacity_fraction=parameters["field_capacity_fraction"]["value"],
-        porosity_fraction=parameters["porosity_fraction"]["value"],
-        wilting_point_fraction=parameters["wilting_point_fraction"]["value"],
-        latitude=parameters["latitude"]["value"],
-        basin_area_total=parameters["basin_area_total"]["value"],
-        impervious_area_fraction=parameters["impervious_area_fraction"]["value"],
-        flow_initial=parameters["flow_initial"]["value"],
+        macropore_fraction=parameters["land_type"]["macropore_fraction"]["value"],
+        soil_depth_total=parameters["basin"]["soil_depth_total"]["value"],
+        soil_depth_ab_horizon=parameters["basin"]["soil_depth_ab_horizon"]["value"],
+        field_capacity_fraction=parameters["basin"]["field_capacity_fraction"]["value"],
+        porosity_fraction=parameters["basin"]["porosity_fraction"]["value"],
+        wilting_point_fraction=parameters["basin"]["wilting_point_fraction"]["value"],
+        basin_area_total=parameters["basin"]["basin_area_total"]["value"],
+        impervious_area_fraction=parameters["basin"]["impervious_area_fraction"]["value"],
+        flow_initial=parameters["basin"]["flow_initial"]["value"],
         twi_values=twi["twi"].to_numpy(),
         twi_saturated_areas=twi["proportion"].to_numpy(),
         twi_mean=preprocessed_data["twi_weighted_mean"],

@@ -4,6 +4,12 @@ Changelog
 
 Version 0.1.0
 -------------
+2019-05-09
+----------
+- Change from one parameter file to two parameter files, where one 
+  file is specific for the entire basin (parameters_basin.csv) and 
+  the other file is specific for the land type (parameters_forest.csv,
+  parameters_agriculture.csv, parameters_developed.csv).
 
 2019-05-06
 ----------

@@ -89,18 +89,27 @@ def check_data(data):
     :param data: A dict that contains all the data from the file.
     :type data: dict
     """
-    check_scaling_parameter(data["scaling_parameter"]["value"])
-    check_latitude(data["latitude"]["value"])
-    check_soil_depth_total(data["soil_depth_total"]["value"])
-    check_soil_depth_ab_horizon(data["soil_depth_ab_horizon"]["value"],
-                                data["soil_depth_total"]["value"])
-    check_field_capacity(data["field_capacity_fraction"]["value"])
-    check_macropore(data["macropore_fraction"]["value"])
-    check_impervious_area(data["impervious_area_fraction"]["value"])
-    check_field_capacity_wilting_point(data["field_capacity_fraction"]["value"],
-                                       data["wilting_point_fraction"]["value"])
-    check_field_capacity_porosity(data["field_capacity_fraction"]["value"],
-                                  data["porosity_fraction"]["value"])
+    if "scaling_parameter" in data.keys():
+        check_scaling_parameter(data["scaling_parameter"]["value"])
+    if "latitude" in data.keys():
+        check_latitude(data["latitude"]["value"])
+    if "soil_depth_total" in data.keys():
+        check_soil_depth_total(data["soil_depth_total"]["value"])
+    if "soil_depth_ab_horizon" in data.keys() and "soil_depth_total" in data.keys():
+        check_soil_depth_ab_horizon(data["soil_depth_ab_horizon"]["value"],
+                                    data["soil_depth_total"]["value"])
+    if "field_capacity_fraction" in data.keys():
+        check_field_capacity(data["field_capacity_fraction"]["value"])
+    if "macropore_fraction" in data.keys():
+        check_macropore(data["macropore_fraction"]["value"])
+    if "impervious_area_fraction" in data.keys():
+        check_impervious_area(data["impervious_area_fraction"]["value"])
+    if "field_capacity_fraction" in data.keys() and "wilting_point_fraction" in data.keys():
+        check_field_capacity_wilting_point(data["field_capacity_fraction"]["value"],
+                                           data["wilting_point_fraction"]["value"])
+    if "field_capacity_fraction" in data.keys() and "porosity_fraction" in data.keys():
+        check_field_capacity_porosity(data["field_capacity_fraction"]["value"],
+                                      data["porosity_fraction"]["value"])
 
 
 def check_scaling_parameter(value):

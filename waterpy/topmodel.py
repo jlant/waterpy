@@ -46,7 +46,6 @@ class Topmodel:
                  field_capacity_fraction,
                  porosity_fraction,
                  wilting_point_fraction,
-                 latitude,
                  basin_area_total,
                  impervious_area_fraction,
                  twi_values,
@@ -81,7 +80,6 @@ class Topmodel:
         self.field_capacity_fraction = field_capacity_fraction
         self.porosity_fraction = porosity_fraction
         self.wilting_point_fraction = wilting_point_fraction
-        self.latitude = latitude
         self.basin_area_total = basin_area_total
         self.impervious_area_fraction = impervious_area_fraction
 
