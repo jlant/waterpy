@@ -4,6 +4,12 @@ Changelog
 
 Version 0.1.0
 -------------
+
+2019-05-13
+----------
+- Add karst option which essentially bypasses the subsurface flow.
+
+
 2019-05-09
 ----------
 - Change from one parameter file to two parameter files, where one 
