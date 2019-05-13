@@ -204,7 +204,8 @@ def run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data):
         precip_available=preprocessed_data["precip_minus_pet"],
         temperatures=timeseries["temperature"].to_numpy(),
         timestep_daily_fraction=preprocessed_data["timestep_daily_fraction"],
-        option_channel_routing=config_data["Options"].getboolean("option_channel_routing")
+        option_channel_routing=config_data["Options"].getboolean("option_channel_routing"),
+        option_karst=config_data["Options"].getboolean("option_karst")
     )
 
     # Run Topmodel

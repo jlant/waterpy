@@ -35,7 +35,10 @@ from . import utils
 
 class Topmodel:
     """Class that represents a Topmodel based rainfall-runoff model
-    implementation by David Wolock.
+    implementation originally by David Wolock (USGS) and subsequent versions
+    by Leon Kauffman (USGS) and Tanja Williamson (USGS).
+
+    Please see references in the module docstring.
     """
     def __init__(self,
                  scaling_parameter,
@@ -57,7 +60,8 @@ class Topmodel:
                  temperatures,
                  flow_initial=1,
                  timestep_daily_fraction=1,
-                 option_channel_routing=True):
+                 option_channel_routing=True,
+                 option_karst=False):
 
         # Check and assign timestep daily fraction
         if timestep_daily_fraction > 1:
@@ -145,6 +149,9 @@ class Topmodel:
         # Temperatures used to set exponent for new evaporation calculation
         self.temperatures = temperatures
 
+        # Karst option
+        self.option_karst = option_karst
+
         self.saturation_deficit_local = None
         self.precip_for_evaporation = None
         self.precip_for_recharge = None
@@ -158,6 +165,7 @@ class Topmodel:
         self.flow_predicted_impervious_area = None
         self.flow_predicted_total = None
         self.flow_predicted_stream = None
+        self.flow_predicted_karst = None
 
         # Initialize model
         self._initialize()
@@ -282,6 +290,7 @@ class Topmodel:
             # local saturation deficit
             self.flow_predicted_overland = 0
             self.flow_predicted_vertical_drainage_flux = 0
+            self.flow_predicted_karst = 0
             self.precip_excesses = np.zeros(self.num_twi_increments)
             self.saturation_deficit_local = utils.nans(self.num_twi_increments)
 
@@ -536,6 +545,12 @@ class Topmodel:
                     * math.exp(-1 * self.subsurface_flow_rate_ratio)
                 )
 
+            # If karst option is set to True, then send flow to karst
+            # and set the subsurface flow to 0 "bypassing" subsurface.
+            if self.option_karst:
+                self.flow_predicted_karst = self.flow_predicted_subsurface
+                self.flow_predicted_subsurface = 0
+
             # Update the average watershed saturation deficit with the
             # subsurface flow and the vertical drainage flux
             self.saturation_deficit_avg = (
@@ -577,10 +592,13 @@ class Topmodel:
             # Channel routing
             # ===============
             # Calculate the flow delivered to the stream
+            # Note: self.flow_predicted_karst will be 0 unless
+            # the option for karst is set to True.
             self.flow_predicted_stream = (
                 self.flow_predicted_total
                 * (1 - self.impervious_area_fraction)
                 + self.flow_predicted_impervious_area
+                + self.flow_predicted_karst
             )
 
             if self.flow_predicted_stream < 0:
