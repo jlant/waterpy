@@ -663,3 +663,29 @@ def flow_duration(values):
     )
 
     return probabilities, values_sorted
+
+
+def randomize(value, size=24):
+    """Generate pseudo random values of a certain size that sum to 1.0.
+    Used to create 24 hourly random values from a single daily value.
+
+    :param values: Value
+    :type values: float
+    :param size: Size of array wanted to be returned, default is 24 (hours)
+    :return randomized: Array of random values.
+    :rtype: numpy.ndarray
+
+    """
+    # Set the seed to reproduce results
+    np.random.seed(1)
+
+    # Create random array of a certain size
+    random_array = np.random.random(size)
+
+    # Normalize to make the sum of the array equal to 1.0
+    random_array_normalized = random_array / random_array.sum()
+
+    # Distribute value across array
+    randomized = random_array_normalized * value
+
+    return randomized
