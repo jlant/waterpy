@@ -706,8 +706,15 @@ def randomize_daily_to_hourly(values):
     # Create an array of random hourly values from daily values
     randomized = []
     for value in values:
-        # Create random array of 24 hours
-        rand = np.random.random(24)
+        # Create random array of 24 hours and add some zeros
+        n_zeros = np.random.randint(1, 24)
+        n_non_zeros = 24 - n_zeros
+
+        rand = np.random.random(n_non_zeros)
+        rand = np.append(rand, np.zeros(n_zeros))
+
+        # Shuffle the array to that the zeros are dispersed throughout the day
+        np.random.shuffle(rand)
 
         # Normalize to make the sum of the array equal to 1.0
         rand_normalized = rand / rand.sum()
