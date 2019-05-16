@@ -9,12 +9,25 @@ waterpy
 flow in rivers. *waterpy* is a command line application written in Python
 using Click_, and is a complete conversion of the original rainfall-runoff
 model, called Topmodel, from Fortran to Python. The specific version of 
-Topmodel that *waterpy* is based on is the version by David Wolock, 
+Topmodel that *waterpy* was initially based on a version by David Wolock, 
 U.S. Geological Survey. Please see report below for more details: 
 
         Wolock, D.M., "Simulating the variable-source-area concept of
         streamflow generation with the watershed model Topmodel", U.S. Geological
         Survey, Water-Resources Investigations Report 93-4124, 1993.
+
+The David Wolock version was recoded and reproduced in the `topmodelpy`_ project.
+
+*waterpy* is a fork of the David Wolock version with many modifications in an 
+attempt to replicated the Topmodel versions by Leon Kaufmann (USGS) and
+Tanja Williamson (USGS). Please see report below for more details:
+
+        Williamson, T.N., Lant, J.G., Claggett, P.R., Nystrom, E.A.,
+        Milly, P.C.D., Nelson, H.L., Hoffman, S.A., Colarullo, S.J., and Fischer, J.M.,
+        2015, Summary of hydrologic modeling for the Delaware River Basin using the
+        Water Availability Tool for Environmental Resources (WATER): U.S. Geological
+        Survey Scientific Investigations Report 2015–5143, 68 p.,
+        http://dx.doi.org/10.3133/sir20155143
 
 
 Features
@@ -26,11 +39,20 @@ Features
 Example
 -------
 
-Add a short example
+To run waterpy, give waterpy the command `run` along with the path to the 
+model configuration file:
 
 ::
 
-    show some example code here
+    $ waterpy run <path-to-your-modelconfig.ini>
+    $ waterpy run data/modelconfig.ini
+
+The model results are saved to the output directory location specified in
+the model configuration file.
+
+A sample model configuration file called `modelconfig.ini` is located in the 
+`data/` directory along with sample input files located in the `inputs/`
+directory and sample output files located in the `outputs/` directory.
 
 
 Documentation
@@ -153,3 +175,4 @@ Jeremiah Lant <jlant@usgs.gov>
 .. _Distutils: https://docs.python.org/3/library/distutils.html
 .. _Installing Python Modules: https://docs.python.org/3.5/install/
 .. _How Installation Works: https://docs.python.org/3.5/install/#how-installation-works
+.. _topmodelpy: https://github.com/jlant/topmodelpy
