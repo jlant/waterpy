@@ -24,4 +24,4 @@ python-dateutil==2.8.0
 pytz==2018.9
 scipy==1.2.1
 six==1.12.0
--e git+git@github.com:jlant/waterpy.git@067cdea4d6bc272d24e224b4c12d36cef915899f#egg=waterpy
+-e git+git@github.com:jlant/waterpy.git@2981a4f4539c559b55c1f9a40c38ef7e37a0ba77#egg=waterpy
