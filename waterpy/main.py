@@ -205,7 +205,10 @@ def run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data):
         temperatures=timeseries["temperature"].to_numpy(),
         timestep_daily_fraction=preprocessed_data["timestep_daily_fraction"],
         option_channel_routing=config_data["Options"].getboolean("option_channel_routing"),
-        option_karst=config_data["Options"].getboolean("option_karst")
+        option_karst=config_data["Options"].getboolean("option_karst"),
+        option_randomize_daily_to_hourly=(
+            config_data["Options"].getboolean("option_randomize_daily_to_hourly")
+        )
     )
 
     # Run Topmodel

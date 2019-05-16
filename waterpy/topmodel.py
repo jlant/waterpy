@@ -39,6 +39,9 @@ class Topmodel:
     by Leon Kauffman (USGS) and Tanja Williamson (USGS).
 
     Please see references in the module docstring.
+
+    Notes:
+        Temperatures used to set exponent for new evaporation calculation
     """
     def __init__(self,
                  scaling_parameter,
@@ -61,16 +64,40 @@ class Topmodel:
                  flow_initial=1,
                  timestep_daily_fraction=1,
                  option_channel_routing=True,
-                 option_karst=False):
+                 option_karst=False,
+                 option_randomize_daily_to_hourly=False):
 
-        # Check and assign timestep daily fraction
+        # Check timestep daily fraction
         if timestep_daily_fraction > 1:
             raise ValueError(
                 "Incorrect timestep: {} \n",
                 "Timestep daily fraction must be less than or equal to 1.",
                 "".format(timestep_daily_fraction)
             )
-        self.timestep_daily_fraction = timestep_daily_fraction
+
+        if option_randomize_daily_to_hourly and timestep_daily_fraction != 1:
+            raise ValueError(
+                "Incorrect timestep: {} \n",
+                "Or incorrect option to randomize daily to hourly.\n",
+                "Option to randomize daily to hourly is True.\n",
+                "However, the timestep daily fraction is not daily, meaning",
+                "it is not equal to 1.",
+                "".format(timestep_daily_fraction)
+            )
+
+        # If option_randomize_daily_to_hourly, then compute updated values for
+        # precip_minus_pet, temperature, and timestep_daily_fraction
+        # Timestep daily fraction is 3600 seconds per hour / 86400 seconds per day
+        if option_randomize_daily_to_hourly:
+            self.option_randomize_daily_to_hourly = option_randomize_daily_to_hourly
+            self.precip_available = hydrocalcs.randomize_daily_to_hourly(precip_available)
+            self.temperatures = hydrocalcs.copy_daily_to_hourly(temperatures)
+            self.timestep_daily_fraction = 3600 / 86400
+        else:
+            self.option_randomize_daily_to_hourly = option_randomize_daily_to_hourly
+            self.precip_available = precip_available
+            self.temperatures = temperatures
+            self.timestep_daily_fraction = timestep_daily_fraction
 
         # Assign parameters
         self.scaling_parameter = scaling_parameter
@@ -96,8 +123,7 @@ class Topmodel:
         self.twi_mean = twi_mean
         self.num_twi_increments = len(self.twi_values)
 
-        # Check and assign precip and potential evapotranspiration (pet)
-        self.precip_available = precip_available
+        # Calculate the number of timesteps
         self.num_timesteps = len(self.precip_available)
 
         # Initialize total predicted flow array with nan
@@ -145,9 +171,6 @@ class Topmodel:
         # Variables used in self.run() method
         self.saturation_deficit_locals = utils.nans((self.num_timesteps,
                                                      self.num_twi_increments))
-
-        # Temperatures used to set exponent for new evaporation calculation
-        self.temperatures = temperatures
 
         # Karst option
         self.option_karst = option_karst
@@ -619,3 +642,24 @@ class Topmodel:
             # Saving variables of interest
             # ============================
             self.saturation_deficit_avgs[i] = self.saturation_deficit_avg
+
+        # Post processing
+        # ===============
+        # If option_randomize_daily_to_hourly is True, then convert back from
+        # hourly to daily.
+        if self.option_randomize_daily_to_hourly:
+            self.flow_predicted = (
+                hydrocalcs.sum_hourly_to_daily(self.flow_predicted)
+            )
+            self.saturation_deficit_avgs = (
+                hydrocalcs.sum_hourly_to_daily(self.saturation_deficit_avgs)
+            )
+            self.saturation_deficit_locals = (
+                hydrocalcs.sum_hourly_to_daily(self.saturation_deficit_locals)
+            )
+            self.unsaturated_zone_storages = (
+                hydrocalcs.sum_hourly_to_daily(self.unsaturated_zone_storages)
+            )
+            self.root_zone_storages = (
+                hydrocalcs.sum_hourly_to_daily(self.root_zone_storages)
+            )

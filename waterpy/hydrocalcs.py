@@ -672,6 +672,7 @@ def randomize(value, size=24):
     :param values: Value
     :type values: float
     :param size: Size of array wanted to be returned, default is 24 (hours)
+    :type size: int
     :return randomized: Array of random values.
     :rtype: numpy.ndarray
 
@@ -689,3 +690,69 @@ def randomize(value, size=24):
     randomized = random_array_normalized * value
 
     return randomized
+
+
+def randomize_daily_to_hourly(values):
+    """Generate pseudo random values of a certain size that sum to 1.0.
+    Used to create hourly random values from daily values.
+
+    :param values: Daily values to randomize into hourly values.
+    :type values: numpy.ndarray
+    :rtype: numpy.ndarray
+    """
+    # Set the seed to reproduce results
+    np.random.seed(1)
+
+    # Create an array of random hourly values from daily values
+    randomized = []
+    for value in values:
+        # Create random array of 24 hours
+        rand = np.random.random(24)
+
+        # Normalize to make the sum of the array equal to 1.0
+        rand_normalized = rand / rand.sum()
+
+        # Distribute value across array
+        rand_with_value = rand_normalized * value
+
+        # Loop through random array with value and append random values to list
+        for rand_value in rand_with_value:
+            randomized.append(rand_value)
+
+    return np.array(randomized)
+
+
+def copy_daily_to_hourly(values):
+    """Create hourly values from daily values by copying each daily value
+    and spreading it across and hourly array.
+
+    :param values: Daily values to copy into hourly values.
+    :type values: numpy.ndarray
+    :rtype: numpy.ndarray
+    """
+    # Create an array of hourly values from daily values
+    copied = []
+    for value in values:
+        # Create array for 24 hours and distribute (copy) daily value to hourly
+        hourly_array = np.ones(24) * value
+
+        # Loop through array and append hourly values to list
+        for hourly_value in hourly_array:
+            copied.append(hourly_value)
+
+    return np.array(copied)
+
+
+def sum_hourly_to_daily(values):
+    """Create daily values from hourly values by summing in every 24th element
+    in the array.
+
+    :param values: Hourly values to sum into daily values.
+    :type values: numpy.ndarray
+    :rtype: numpy.ndarray
+
+    """
+    new_shape = (-1, 24) + values.shape[1:]
+    values = values.reshape(new_shape)
+
+    return np.sum(values, axis=1)
