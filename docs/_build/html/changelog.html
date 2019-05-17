@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Changelog &#8212; waterpy 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Authors" href="authors.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="version-0-1-0">
+<h2>Version 0.1.0<a class="headerlink" href="#version-0-1-0" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id1">
+<h2>2019-05-13<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add karst option which essentially bypasses the subsurface flow.</p></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>2019-05-09<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Change from one parameter file to two parameter files, where one
+file is specific for the entire basin (parameters_basin.csv) and
+the other file is specific for the land type (parameters_forest.csv,
+parameters_agriculture.csv, parameters_developed.csv).</p></li>
+<li><p>Add calculation to adjust the scaling parameter by the spatial coefficient.</p></li>
+<li><p>Add new calculation for soil depth of the root zone using the new parameter
+called rooting_depth_factor</p></li>
+<li><p>Change the calculation for the predicted impervious area flow by using TR55
+SCS curve number method instead of using Equation 37 in Wolock paper from 1993.
+The percentage of precipitation used for the TR55 runoff calculation is:
+impervious_area_fraction * precip_available_recharge</p></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>2019-05-06<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add flow duration curves to output.</p></li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>2019-05-03<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add pet calibration coefficient (KPEC) to parameters file
+and update pet_hamon calculation to use the user-specified value.</p></li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>2019-05-03<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add SCS runoff curve number calculation to hydrocals.py</p></li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>2019-04-29<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add new snow melt routine with the addition of snow water
+equivalence, and add all snow melt related parameters to output.</p></li>
+<li><p>Add channel routing option to model config file.</p></li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h2>2019-04-26<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Add new transmissivity calculation using methodology from a
+pmodel by Leon Kauffman (USGS) called KyTopmodel.</p></li>
+<li><p>Add new parameters to parameters file with associated checks
+w parameters added include: wilting_point_fraction,
+tion, saturated_hydraulic_conductivity_multiplier</p></li>
+<li><dl class="simple">
+<dt>Change root_zone_storage - root_zone_storage_max to</dt><dd><p>root_zone_storage + root_zone_storage_max</p>
+</dd>
+</dl>
+<p>This is the Robert Hudson fix to Kentucky version of Topmodel.  Occurs within
+the conditional of root_zone_storage &gt; root_zone_storage_max</p>
+</li>
+<li><p>Change initialization of root_zone_storage by adding a
+multiplication factor of 0.5 which is applied to the root_zone_storage_max.</p></li>
+<li><p>Add check on initial flow, if flow_initial &lt; 0.1, set to 0.1.</p></li>
+<li><p>Set the soil depth of the roots to equal the soil depth of the
+AB horizon, instead of having the soil depth of the roots set to 1 meter.</p></li>
+</ul>
+</div>
+<div class="section" id="version-0-0-1">
+<h2>Version 0.0.1<a class="headerlink" href="#version-0-0-1" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id8">
+<h2>2019-04-26<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>initial Dave Wolock version is implemented in this version.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">waterpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">waterpy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code documentation</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-1-0">Version 0.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">2019-05-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">2019-05-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">2019-05-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">2019-05-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">2019-05-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">2019-04-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">2019-04-26</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-0-1">Version 0.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">2019-04-26</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="authors.html" title="previous chapter">Authors</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      
+      
+      
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/changelog.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

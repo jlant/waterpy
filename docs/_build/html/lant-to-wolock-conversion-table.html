@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; waterpy 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p>Table 1. Lookup table between variable names used in this code versus variable
+names used in Wolock’s Fortran code.</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 12%" />
+<col style="width: 36%" />
+<col style="width: 16%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Lant Python Code</p></th>
+<th class="head"><p>Wolock Fortran Code</p></th>
+<th class="head"><p>Definition</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>timestep_daily_fraction</p></td>
+<td><p>DT</p></td>
+<td><p>Fraction of a daily timestep</p></td>
+<td><p>fraction</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>scaling_parameter</p></td>
+<td><p>SZM</p></td>
+<td><p>Scaling parameter based on soil properties</p></td>
+<td><p>millimeters</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>saturated_hydraulic_conductivity</p></td>
+<td><p>CONMEAN</p></td>
+<td><p>Saturated hydraulic conductivity of the C horizon of the soil</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>macropore_fraction</p></td>
+<td><p>PMAC</p></td>
+<td><p>Fraction of precipitation bypassing the soil zone</p></td>
+<td><p>fraction</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>soil_depth_total</p></td>
+<td><p>ZTOT</p></td>
+<td><p>Total soil depth (zone AB + zone C)</p></td>
+<td><p>meters</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>soil_depth_ab_horizon</p></td>
+<td><p>ZAB</p></td>
+<td><p>Depth of AB horizon</p></td>
+<td><p>meters</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>field_capacity_fraction</p></td>
+<td><p>THFC</p></td>
+<td><p>Field capacity of soil</p></td>
+<td><p>fraction</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>latitude</p></td>
+<td><p>XLAT</p></td>
+<td><p>Latitude</p></td>
+<td><p>degrees</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>basin_area_total</p></td>
+<td><p>ATOT</p></td>
+<td><p>Total watershed area</p></td>
+<td><p>square kilometers</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>impervious_area_fraction</p></td>
+<td><p>PIMP</p></td>
+<td><p>Fraction of impervious area</p></td>
+<td><p>fraction</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>snowmelt_temperature_cutoff</p></td>
+<td><p>TCUT</p></td>
+<td><p>Temperature cutoff for snowpack accumulation and snowmelt</p></td>
+<td><p>degrees Fahrenheit</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>snowmelt_rate_coeff</p></td>
+<td><p>SNOPROP</p></td>
+<td><p>Snowmelt parameter</p></td>
+<td><p>inches/degree Fahrenheit</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>snowmelt_rate_with_rain_coeff</p></td>
+<td><p>RAINPRO</p></td>
+<td><p>Rain-induced snowmelt parameter</p></td>
+<td><p>1/degree Fahrenheit</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>channel_length_max</p></td>
+<td><p>DMAX</p></td>
+<td><p>Maximum channel length</p></td>
+<td><p>kilometers</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>channel_velocity_avg</p></td>
+<td><p>SUBV</p></td>
+<td><p>Channel velocity</p></td>
+<td><p>kilometers/day</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>channel_travel_time</p></td>
+<td><p>NTW</p></td>
+<td><p>Channel travel time</p></td>
+<td><p>days</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>flow_initial</p></td>
+<td><p>Q0</p></td>
+<td><p>Initial flow</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>twi_values</p></td>
+<td><p>ST</p></td>
+<td><p>ln(a/tanB) values</p></td>
+<td><p>ln(meters)</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>twi_saturated_areas</p></td>
+<td><p>AC</p></td>
+<td><p>Saturated land-surface area in watershed</p></td>
+<td><p>fraction</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>twi_mean</p></td>
+<td><p>TL</p></td>
+<td><p>Mean of ln(a/tanB) distribution</p></td>
+<td><p>ln(meters)</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>num_twi_increments</p></td>
+<td><p>NAC</p></td>
+<td><p>Number of twi increments or bins</p></td>
+<td><p>—</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>precip</p></td>
+<td><p>PP,P,PPT</p></td>
+<td><p>Precipitation rate</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>pet</p></td>
+<td><p>PET</p></td>
+<td><p>Potential evapotranspiration rate</p></td>
+<td><p>millimeters/day</p></td>
+<td><p>millimeters in Wolock</p></td>
+</tr>
+<tr class="row-odd"><td><p>precip_available</p></td>
+<td><p>PPTPET</p></td>
+<td><p>Precipiation - Potential evapotranspiration</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>num_timesteps</p></td>
+<td><p>NSTEPS</p></td>
+<td><p>Number of timesteps; number of precipitation data values</p></td>
+<td><p>—</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>flow_predicted</p></td>
+<td><p>QPRED</p></td>
+<td><p>Total predicted flow</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>soil_depth_roots</p></td>
+<td><p>ZROOT</p></td>
+<td><p>Root-zone depth</p></td>
+<td><p>meters</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>soil_depth_c_horizon</p></td>
+<td><p>ZAB</p></td>
+<td><p>Depth of AB horizon</p></td>
+<td><p>meters</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>vertical_drainage_flux_initial</p></td>
+<td><p>U0</p></td>
+<td><p>Initial vertical drainage flux</p></td>
+<td><p>millimeters/day</p></td>
+<td><p>CONMEAN*TSTEP in Wolock</p></td>
+</tr>
+<tr class="row-odd"><td><p>transmissivity_saturated_max</p></td>
+<td><p>TRANS</p></td>
+<td><p>Maximum saturated transmissivity</p></td>
+<td><p>square millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>flow_subsurface_max</p></td>
+<td><p>SZQ</p></td>
+<td><p>Maximum subsurface flow rate</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>root_zone_storage_max</p></td>
+<td><p>SRMAX</p></td>
+<td><p>Maximum root-zone storage</p></td>
+<td><p>millimeters</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>saturation_deficit_avg</p></td>
+<td><p>S</p></td>
+<td><p>Watershed average saturation deficit</p></td>
+<td><p>millimeters</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>vertical_drainage_flux</p></td>
+<td><p>UZ</p></td>
+<td><p>Vertical drainage flux; upper soil to saturated subsurface</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>unsaturated_zone_storage</p></td>
+<td><p>SUZ</p></td>
+<td><p>Soil water available for drainage</p></td>
+<td><p>millimeters</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>root_zone_storage</p></td>
+<td><p>SRZ</p></td>
+<td><p>Root zone storage</p></td>
+<td><p>millimeters</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>saturation_deficit_local</p></td>
+<td><p>SD</p></td>
+<td><p>Saturation deficit at location x</p></td>
+<td><p>millimeters</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>precip_for_evaporation</p></td>
+<td><p>EPC</p></td>
+<td><p>The negative of precip minus pet</p></td>
+<td><p>millimeters/day</p></td>
+<td><p>-PPTPET in Wolock</p></td>
+</tr>
+<tr class="row-even"><td><p>precip_for_recharge</p></td>
+<td><p>PP</p></td>
+<td><p>The positive of precip minus pet</p></td>
+<td><p>millimeters/day</p></td>
+<td><p>PPTPET in Wolock</p></td>
+</tr>
+<tr class="row-odd"><td><p>precip_excesses</p></td>
+<td><p>EX</p></td>
+<td><p>Precip in excess of pet and field capacity storage</p></td>
+<td><p>millimeters</p></td>
+<td><p>array</p></td>
+</tr>
+<tr class="row-even"><td><p>precip_excess</p></td>
+<td><p>PPEX</p></td>
+<td><p>Precip in excess of pet and field capacity storage</p></td>
+<td><p>millimeters</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-odd"><td><p>flow_predicted_overland</p></td>
+<td><p>QOF</p></td>
+<td><p>Predicted overland flow</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>flow_predicted_vertical_drainage_flux</p></td>
+<td><p>QUZ</p></td>
+<td><p>Predicted vertical drainage flux</p></td>
+<td><p>millimeters/day</p></td>
+<td><p>units? (UZ*AC(IA))</p></td>
+</tr>
+<tr class="row-odd"><td><p>flow_predicted_subsurface</p></td>
+<td><p>QB</p></td>
+<td><p>Predicted subsurface flow</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>flow_predicted_impervious_area</p></td>
+<td><p>–</p></td>
+<td><p>Predicted impervious area flow</p></td>
+<td><p>millimeters/day</p></td>
+<td><p>in Lant</p></td>
+</tr>
+<tr class="row-odd"><td><p>flow_predicted_total</p></td>
+<td><p>QPRED</p></td>
+<td><p>Total predicted flow</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>flow_predicted_stream</p></td>
+<td><p>QQ</p></td>
+<td><p>Flow delivered to stream channel</p></td>
+<td><p>millimeters/day</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">waterpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">waterpy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      
+      
+      
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/lant-to-wolock-conversion-table.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
