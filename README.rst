@@ -19,7 +19,7 @@ U.S. Geological Survey. Please see report below for more details:
 The David Wolock version was recoded and reproduced in the `topmodelpy`_ project.
 
 *waterpy* is a fork of the David Wolock version with many modifications in an 
-attempt to replicated the Topmodel versions by Leon Kaufmann (USGS) and
+attempt to replicate the Topmodel versions by Leon Kaufmann (USGS) and
 Tanja Williamson (USGS). Please see report below for more details:
 
         Williamson, T.N., Lant, J.G., Claggett, P.R., Nystrom, E.A.,
@@ -34,6 +34,7 @@ Features
 --------
 
 * Written entirely in Python for ease of use and model extension.
+* Generates a report.hmtl file of model results with interactive plots.
 
 
 Example
@@ -58,7 +59,7 @@ directory and sample output files located in the `outputs/` directory.
 Documentation
 -------------
 
-Code documentation is located in the `data` directory.
+An initial website of documentation is located in the `docs` directory.
 
 
 Tests
