@@ -221,6 +221,7 @@ def run_topmodel(config_data, parameters, timeseries, twi, preprocessed_data):
         "saturation_deficit_locals": topmodel.saturation_deficit_locals,
         "unsaturated_zone_storages": topmodel.unsaturated_zone_storages,
         "root_zone_storages": topmodel.root_zone_storages,
+        "evaporations": topmodel.evaporations,
     }
 
     return topmodel_data
@@ -362,6 +363,11 @@ def write_output_matrices_csv(config_data, timeseries, topmodel_data):
                      index=timeseries.index)
     )
 
+    evaporations_df = (
+        pd.DataFrame(topmodel_data["evaporations"],
+                     index=timeseries.index)
+    )
+
     saturation_deficit_locals_df.to_csv(
         PurePath(
             config_data["Outputs"]["output_dir"],
@@ -384,6 +390,15 @@ def write_output_matrices_csv(config_data, timeseries, topmodel_data):
         PurePath(
             config_data["Outputs"]["output_dir"],
             config_data["Outputs"]["output_filename_root_zone_storages"]
+        ),
+        float_format="%.2f",
+        header=header,
+    )
+
+    evaporations_df.to_csv(
+        PurePath(
+            config_data["Outputs"]["output_dir"],
+            config_data["Outputs"]["output_filename_evaporations"]
         ),
         float_format="%.2f",
         header=header,

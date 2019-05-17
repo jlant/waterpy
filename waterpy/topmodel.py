@@ -172,6 +172,9 @@ class Topmodel:
         self.saturation_deficit_locals = utils.nans((self.num_timesteps,
                                                      self.num_twi_increments))
 
+        self.evaporations = utils.nans((self.num_timesteps,
+                                        self.num_twi_increments))
+
         # Karst option
         self.option_karst = option_karst
 
@@ -180,7 +183,6 @@ class Topmodel:
         self.precip_for_recharge = None
         self.precip_excesses = None
         self.precip_excess = None
-        self.evaporation = None
         self.et_exponent = None
         self.flow_predicted_overland = None
         self.flow_predicted_vertical_drainage_flux = None
@@ -189,6 +191,8 @@ class Topmodel:
         self.flow_predicted_total = None
         self.flow_predicted_stream = None
         self.flow_predicted_karst = None
+
+        self.evaporation = np.zeros(self.num_twi_increments)
 
         # Initialize model
         self._initialize()
@@ -507,7 +511,7 @@ class Topmodel:
                 # Table 2 of USGS SIR 20155143 (see reference [2] in
                 # module docstring)
                 if self.precip_for_evaporation > 0:
-                    self.evaporation = self.precip_for_evaporation * (
+                    self.evaporation[j] = self.precip_for_evaporation * (
                         (self.root_zone_storage[j] / self.root_zone_storage_max)**self.et_exponent
                     )
 
@@ -515,8 +519,8 @@ class Topmodel:
                     # greater than the soil root zone storage amount, then
                     # assign all the water in the soil root zone storage to the
                     # precipitation available for evapotranspiration
-                    if self.evaporation > self.root_zone_storage[j]:
-                        self.evaporation = self.root_zone_storage[j]
+                    if self.evaporation[j] > self.root_zone_storage[j]:
+                        self.evaporation[j] = self.root_zone_storage[j]
 
                     # Calculate the amount of water in the soil root zone
                     # storage by removing the amount available for
@@ -526,7 +530,7 @@ class Topmodel:
                     # available for evapotranspiration is greater than the soil
                     # root zone storage amount
                     self.root_zone_storage[j] = (
-                        self.root_zone_storage[j] - self.evaporation
+                        self.root_zone_storage[j] - self.evaporation[j]
                     )
 
                 # Overland flow
@@ -547,6 +551,7 @@ class Topmodel:
                 self.unsaturated_zone_storages[i][j] = self.unsaturated_zone_storage[j]
                 self.root_zone_storages[i][j] = self.root_zone_storage[j]
                 self.saturation_deficit_locals[i][j] = self.saturation_deficit_local[j]
+                self.evaporations[i][j] = self.evaporation[j]
 
                 # END OF TWI INCREMENTS LOOP
 
@@ -662,4 +667,7 @@ class Topmodel:
             )
             self.root_zone_storages = (
                 hydrocalcs.sum_hourly_to_daily(self.root_zone_storages)
+            )
+            self.evaporations = (
+                hydrocalcs.sum_hourly_to_daily(self.evaporations)
             )
