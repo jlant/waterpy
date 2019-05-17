@@ -19,8 +19,12 @@ with open("LICENSE") as license_file:
 
 requirements = [
     "click",
+    "jinja2",
+    "matplotlib",
+    "mpld3",
     "numpy",
     "pandas",
+    "scipy",
 ]
 
 test_requirements = [
@@ -41,6 +45,7 @@ setup(
         "waterpy",
     ],
     package_dir={"waterpy": "waterpy"},
+    package_data={"waterpy": ["templates/*.html"]},
     entry_points={"console_scripts": ["waterpy = waterpy.cli:main"]},
     include_package_data=True,
     install_requires=requirements,

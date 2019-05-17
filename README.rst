@@ -58,7 +58,7 @@ directory and sample output files located in the `outputs/` directory.
 Documentation
 -------------
 
-Add a link to the project and code documenation site.
+Code documentation is located in the `data` directory.
 
 
 Tests
@@ -75,7 +75,16 @@ To run the test suite, from the command line in the project's root directory::
 Requirements
 ------------
 
-Add requirements and code dependencies.
+The following are the main requirements/dependencies:
+
+Click==7.0  
+Jinja2==2.10.1  
+matplotlib==3.0.3  
+mpld3==0.3  
+numpy==1.16.2  
+pandas==0.24.1  
+pytest==4.3.0  
+scipy==1.2.1  
 
 
 Installation
@@ -109,6 +118,15 @@ If you do not have Python_ installed, please download the latest version from `P
 
 waterpy will now be installed to the standard location for third-party Python modules on your
 computer platform.
+
+All the required 3rd party packages in the "Requirements" section should be installed as well,
+however, if the additional packages are not installed you can manually install them using `pip`::
+
+    $ pip install click jinja2 matplotlib mpld3 numpy pandas scipy
+
+or from within the parent *waterpy* directory::
+
+    $ pip install requirements.txt
 
 For more information regarding installing third-party Python modules, please see `Installing Python Modules`_
 For a description of how installation works including where the module will be installed on your computer platform,
