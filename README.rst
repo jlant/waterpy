@@ -77,14 +77,14 @@ Requirements
 
 The following are the main requirements/dependencies:
 
-Click==7.0  
-Jinja2==2.10.1  
-matplotlib==3.0.3  
-mpld3==0.3  
-numpy==1.16.2  
-pandas==0.24.1  
-pytest==4.3.0  
-scipy==1.2.1  
+Click==7.0    
+Jinja2==2.10.1      
+matplotlib==3.0.3     
+mpld3==0.3     
+numpy==1.16.2     
+pandas==0.24.1     
+pytest==4.3.0     
+scipy==1.2.1     
 
 
 Installation
